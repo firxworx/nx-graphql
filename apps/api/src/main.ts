@@ -1,21 +1,58 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
+import * as http from 'http'
 import * as express from 'express'
-import * as path from 'path'
+import { ApolloServer } from '@apollo/server'
+import { expressMiddleware } from '@apollo/server/express4'
+import * as cors from 'cors'
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import { typeDefs, resolvers } from './schema'
+import * as bodyParser from 'body-parser'
+
+// import * as path from 'path'
+// import { json } from 'body-parser'
+
+interface ApolloContext {
+  token?: string
+}
 
 const app = express()
+const httpServer = http.createServer(app)
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')))
-
-app.get('/api', (_req, res) => {
-  res.send({ message: 'Welcome to api!' })
+const server = new ApolloServer<ApolloContext>({
+  typeDefs,
+  resolvers,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 })
+
+await server.start()
+
+app.use(
+  '/',
+  cors<cors.CorsRequest>(),
+  bodyParser.json(),
+
+  // expressMiddleware accepts args: instance of Apollo Server + optional config options
+  expressMiddleware(server, {
+    context: async ({ req }) => ({ token: req.headers.token }),
+  }),
+)
+
+// app.use('/assets', express.static(path.join(__dirname, 'assets')))
+
+// app.get('/hello', (_req, res) => {
+//   res.send({ message: 'Hello world!' })
+// })
 
 const port = process.env['port'] || 3333
-const server = app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}/api`)
-})
-server.on('error', console.error)
+
+try {
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port }, () => {
+      console.log(`🚀 Server ready at http://localhost:${port}/`)
+      resolve()
+    }),
+  )
+} catch (error: unknown) {
+  console.error(error)
+}
+
+httpServer.on('error', console.error)
