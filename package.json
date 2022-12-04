@@ -14,7 +14,8 @@
     "test:ui": "nx test ui",
     "test:api": "nx test api",
     "lint:ui": "nx lint ui",
-    "lint:api": "nx lint api"
+    "lint:api": "nx lint api",
+    "prettier": "prettier --config .prettierrc --write ."
   },
   "private": true,
   "devDependencies": {
@@ -67,4 +68,3 @@
     "tslib": "^2.3.0"
   }
 }
-

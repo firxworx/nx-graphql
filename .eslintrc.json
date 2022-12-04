@@ -23,8 +23,26 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
+      "extends": ["plugin:@nrwl/nx/typescript", "plugin:jsx-a11y/recommended"],
+      "rules": {
+        // warn on unused vars + disable warnings for variables named with an underscore prefix e.g. `_unused`
+        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+
+        // project convention: explicitly declare types (must declare intent)
+        "@typescript-eslint/no-inferrable-types": "off",
+
+        // project convention: all functions must have explicit return types (must declare intent)
+        "@typescript-eslint/explicit-function-return-type": "warn",
+
+        // project convention: support all components having a *Props interface even if its empty
+        "@typescript-eslint/no-empty-interface": "off",
+
+        // disable rule to allow a common pattern seen with certain packages e.g. clsx { ['class names']: condition }
+        "no-useless-computed-key": "off",
+
+        // disable rule requiring anchor tags have href as nextjs Link component pattern adds the href prop
+        "jsx-a11y/anchor-is-valid": "off"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

@@ -1,15 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
-import NxWelcome from './nx-welcome';
+import { Route, Routes, Link } from 'react-router-dom'
 
-import { Route, Routes, Link } from 'react-router-dom';
+// import styles from './app.module.css'
 
-export function App() {
+export function App(): JSX.Element {
   return (
     <>
-      <NxWelcome title="ui" />
-      <div />
-
+      <div>Welcome ui</div>
       {/* START: routes */}
       {/* These routes and navigation have been generated for you */}
       {/* Feel free to move and update them to fit your needs */}
@@ -31,8 +27,7 @@ export function App() {
           path="/"
           element={
             <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
+              This is the generated root route. <Link to="/page-2">Click here for page 2.</Link>
             </div>
           }
         />
@@ -47,7 +42,7 @@ export function App() {
       </Routes>
       {/* END: routes */}
     </>
-  );
+  )
 }
 
-export default App;
+export default App
