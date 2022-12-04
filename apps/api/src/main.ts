@@ -1,14 +1,13 @@
 import * as http from 'http'
 import * as express from 'express'
-import { ApolloServer } from '@apollo/server'
-import { expressMiddleware } from '@apollo/server/express4'
 import * as cors from 'cors'
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
-import { typeDefs, resolvers } from './schema'
 import * as bodyParser from 'body-parser'
 
-// import * as path from 'path'
-// import { json } from 'body-parser'
+import { ApolloServer } from '@apollo/server'
+import { expressMiddleware } from '@apollo/server/express4'
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+
+import { typeDefs, resolvers } from './schema'
 
 interface ApolloContext {
   token?: string
@@ -17,13 +16,13 @@ interface ApolloContext {
 const app = express()
 const httpServer = http.createServer(app)
 
-const server = new ApolloServer<ApolloContext>({
+const apolloServer = new ApolloServer<ApolloContext>({
   typeDefs,
   resolvers,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 })
 
-await server.start()
+await apolloServer.start()
 
 app.use(
   '/',
@@ -31,7 +30,7 @@ app.use(
   bodyParser.json(),
 
   // expressMiddleware accepts args: instance of Apollo Server + optional config options
-  expressMiddleware(server, {
+  expressMiddleware(apolloServer, {
     context: async ({ req }) => ({ token: req.headers.token }),
   }),
 )
@@ -47,7 +46,7 @@ const port = process.env['port'] || 3333
 try {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port }, () => {
-      console.log(`🚀 Server ready at http://localhost:${port}/`)
+      console.log(`🚀 Server ready at http://localhost:${port}`)
       resolve()
     }),
   )
