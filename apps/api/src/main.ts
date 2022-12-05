@@ -2,6 +2,7 @@ import * as http from 'http'
 import * as express from 'express'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
+import helmet from 'helmet'
 
 import { ApolloServer } from '@apollo/server'
 import { expressMiddleware } from '@apollo/server/express4'
@@ -20,6 +21,9 @@ const apolloServer = new ApolloServer<ApolloContext>({
   typeDefs,
   resolvers,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+
+  // for production consider disabling introspection and using Apollo's schema registry
+  // introspection: process.env['NODE_ENV'] !== 'production',
 })
 
 await apolloServer.start()
@@ -35,18 +39,16 @@ app.use(
   }),
 )
 
-// app.use('/assets', express.static(path.join(__dirname, 'assets')))
+app.use(helmet())
 
-// app.get('/hello', (_req, res) => {
-//   res.send({ message: 'Hello world!' })
-// })
+// app.use('/assets', express.static(path.join(__dirname, 'assets')))
 
 const port = process.env['port'] || 3333
 
 try {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port }, () => {
-      console.log(`🚀 Server ready at http://localhost:${port}`)
+      console.log(`🚀 Server ready with GraphQL at http://localhost:${port}`)
       resolve()
     }),
   )

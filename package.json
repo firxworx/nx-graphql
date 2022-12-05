@@ -1,7 +1,13 @@
 {
   "name": "nx-graphql",
+  "description": "Example of Apollo GraphQL (server + client) with React and ExpressJS in an Nx monorepo",
   "version": "0.0.0",
   "license": "MIT",
+  "author": {
+    "name": "Kevin Firko",
+    "email": "hello@firxworx.com"
+  },
+  "private": true,
   "scripts": {
     "start": "nx run-many --target=serve --projects=ui,api --parallel",
     "build": "nx run-many --target=build --projects=ui,api --parallel",
@@ -17,7 +23,6 @@
     "lint:api": "nx lint api",
     "prettier": "prettier --config .prettierrc --write ."
   },
-  "private": true,
   "devDependencies": {
     "@nrwl/cli": "15.2.4",
     "@nrwl/cypress": "15.2.4",
@@ -68,6 +73,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "graphql": "^16.6.0",
+    "helmet": "^6.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.4.1",
