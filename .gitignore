@@ -3,6 +3,12 @@
 # nx build system
 nx-cloud.env
 
+# environment
+.env
+.env.*
+!.env.sample
+!.env.development
+
 # compiled output
 dist
 build
